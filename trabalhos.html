@@ -292,6 +292,7 @@ justify-content: center;
             .logo { font-size: 2rem !important; margin-right: 0; }
             .nav-bar { grid-template-columns: 1fr 1fr; }
             .nav-item:nth-child(3) { display: none; }
+            .grid-layout { grid-template-columns: repeat(2, 1fr);  }
             .contact-wrapper { flex-direction: column; align-items: center; text-align: center; }
             .contact-links { align-items: center; }
             #main-container { padding: 0px 8px; }
@@ -309,10 +310,10 @@ justify-content: center;
             <div class="logo" onclick="location.href='https://betshoptv.com/temp/santa-home'">SANTACOSTA</div>
             <nav class="desktop-nav">
                 <a style="font-weight: 400; cursor: default; color: var(--verde-medio)">TRABALHOS</a>
-                <a href="https://betshoptv.com/temp/santa-expos">EXPOSIÇÕES</a>
-                <a href="https://betshoptv.com/temp/santa-textos">TEXTOS</a>
-                <a href="https://betshoptv.com/temp/santa-noticias">NOTÍCIAS</a>
-                <a href="https://betshoptv.com/temp/santa-bio">BIO</a>
+                <a href="expos.html">EXPOSIÇÕES</a>
+                <a href="textos.html">TEXTOS</a>
+                <a href="noticias.html">NOTÍCIAS</a>
+                <a href="bio.html">BIO</a>
             </nav>
             
             <div class="mobile-menu-trigger" onclick="toggleMenu(true)">
@@ -343,7 +344,7 @@ justify-content: center;
         </div>
 
 <div id="lightbox" onclick="closeLightbox()">
-        <div class="close-lb" onclick="closeLightbox()">✕</div>"
+        <div class="close-lb" onclick="closeLightbox()">✕</div>
         <div id="lightbox-content"></div>
     </div>
     
@@ -352,11 +353,11 @@ justify-content: center;
 
     <div id="menu-full">
         <div onclick="toggleMenu(false)" style="position:absolute; top:20px; right:8vw; font-size:2.4rem; font-weight: 800; cursor:pointer;">✕</div>
-        <a href="https://betshoptv.com/temp/santa-v3" style="font-size:2.4rem; font-weight: 800;">TRABALHOS</a>
-        <a href="https://betshoptv.com/temp/santa-expos" style="font-size:2.4rem; font-weight: 800;">EXPOSIÇÕES</a>
-        <a href="https://betshoptv.com/temp/santa-textos" style="font-size:2.4rem; font-weight: 800;">TEXTOS</a>
-        <a href="https://betshoptv.com/temp/santa-noticias" style="font-size:2.4rem; font-weight: 800;">NOTÍCIAS</a>
-        <a href="https://betshoptv.com/temp/santa-bio" style="font-size:2.4rem; font-weight: 800;">BIO</a>
+        <a href="trabalhos.html" style="font-size:2.4rem; font-weight: 800;">TRABALHOS</a>
+        <a href="expos.html" style="font-size:2.4rem; font-weight: 800;">EXPOSIÇÕES</a>
+        <a href="textos.html" style="font-size:2.4rem; font-weight: 800;">TEXTOS</a>
+        <a href="noticias.html" style="font-size:2.4rem; font-weight: 800;">NOTÍCIAS</a>
+        <a href="bio.html" style="font-size:2.4rem; font-weight: 800;">BIO</a>
     </div>
 
 <main id="main-container" class="grid-layout"></main>
@@ -389,31 +390,39 @@ justify-content: center;
         }
     }
 
-    function processarDados() {
+function processarDados() {
         const baseThumb = "https://sitesantacosta.github.io/img/thumb/trabalhos/";
         const baseFull = "https://sitesantacosta.github.io/img/full/trabalhos/";
+        const baseZoom = "https://sitesantacosta.github.io/img/zoom/trabalhos/";
 
         const final = rawObras.map(item => {
-            // Busca os nomes dos arquivos no manifesto usando a chave PASTA
             const arquivos = manifesto.trabalhos[item.PASTA] || [];
             
             return {
                 ...item,
                 fotosThumb: arquivos.map(arq => `${baseThumb}${item.PASTA}/${arq}`),
-                fotosFull: arquivos.map(arq => `${baseFull}${item.PASTA}/${arq}`)
+                fotosFull: arquivos.map(arq => `${baseFull}${item.PASTA}/${arq}`),
+                fotosZoom: arquivos.map(arq => `${baseZoom}${item.PASTA}/${arq}`)
             };
         }).sort((a,b) => (parseInt(b.ANO) || 0) - (parseInt(a.ANO) || 0));
 
         return catAtiva === 'TODOS' ? final : final.filter(o => o.CATEGORIA === catAtiva);
     }
-
+    
     function render(lista) {
         const container = document.getElementById('main-container');
         container.innerHTML = '';
         container.className = modoVis === 'GRID' ? 'grid-layout' : 'lista-layout';
 
-        const idxAberto = lista.findIndex(o => o.TITULO === tituloAberto);
-        const fimLinha = idxAberto !== -1 ? Math.min(Math.floor(idxAberto / 3) * 3 + 2, lista.length - 1) : -1;
+const idxAberto = lista.findIndex(o => o.TITULO === tituloAberto);
+
+// 1. Detecta a quantidade de colunas (espelhando o seu @media de 900px)
+const colunas = window.innerWidth <= 900 ? 2 : 3;
+
+// 2. Calcula o final da linha dinamicamente com base nas colunas
+const fimLinha = idxAberto !== -1 
+    ? Math.min(Math.floor(idxAberto / colunas) * colunas + (colunas - 1), lista.length - 1) 
+    : -1;
 
         lista.forEach((obra, i) => {
             if (modoVis === 'GRID') {
@@ -434,19 +443,19 @@ justify-content: center;
         });
     }
 
-    function renderDetalhe(obra, idx, isGrid = true) {
+function renderDetalhe(obra, idx, isGrid = true) {
         const div = document.createElement('div');
         div.className = 'acordeao-container';
         const carouselId = `carousel-${idx}`;
         
         div.innerHTML = `
             <div class="carousel-view" id="${carouselId}" onscroll="syncDots('${carouselId}')">
-                ${obra.fotosThumb.map((f, i) => `
+                ${obra.fotosFull.map((f, i) => `
                     <img src="${f}" onclick="openLightbox(${idx}, ${i})" style="cursor: zoom-in;">
                 `).join('')}
             </div>
-            ${obra.fotosThumb.length > 1 ? `<div class="indicadores" id="dots-${carouselId}">
-                ${obra.fotosThumb.map((_, i) => `
+            ${obra.fotosFull.length > 1 ? `<div class="indicadores" id="dots-${carouselId}">
+                ${obra.fotosFull.map((_, i) => `
                     <div class="ponto ${i===0?'ativo':''}" onclick="scrollCarousel('${carouselId}', ${i})"></div>
                 `).join('')}
             </div>` : ''}
@@ -460,13 +469,13 @@ justify-content: center;
         return div;
     }
 
-    function openLightbox(obraIdx, fotoIdx) {
+function openLightbox(obraIdx, fotoIdx) {
         const listaAtual = processarDados();
         const obra = listaAtual[obraIdx];
         const content = document.getElementById('lightbox-content');
         
-        // Carrega as imagens em FULL (Alta Resolução)
-        content.innerHTML = obra.fotosFull.map(f => `<img src="${f}" onclick="event.stopPropagation()">`).join('');
+        // Carrega as imagens em ZOOM (Máxima Resolução)
+        content.innerHTML = obra.fotosZoom.map(f => `<img src="${f}" onclick="event.stopPropagation()">`).join('');
         document.getElementById('lightbox').style.display = 'flex';
 
         setTimeout(() => {
@@ -529,6 +538,13 @@ justify-content: center;
         const ratio = Math.min(window.scrollY / 380, 1);
         document.documentElement.style.setProperty('--scroll-ratio', ratio);
     };
+    
+    window.addEventListener('keydown', (e) => {
+        // Verifica se a tecla é o ESC e se o lightbox está visível na tela
+        if (e.key === 'Escape' && document.getElementById('lightbox').style.display === 'flex') {
+            closeLightbox();
+        }
+    });
 
     init();
 </script>
