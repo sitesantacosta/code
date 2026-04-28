@@ -35,7 +35,7 @@
             position: relative;
         }
 
-        /* --- HEADER DINÂMICO (Design Consolidado de Trabalhos) --- */
+        /* --- HEADER DINÂMICO --- */
         header { 
             position: sticky; 
             top: 0; 
@@ -89,20 +89,97 @@
         .mobile-menu-trigger { display: none; margin-left: auto; cursor: pointer; }
         .icon-svg { width: 18px; height: 18px; fill: var(--verde-escuro-fundo); transition: transform 0.3s ease; }
 
-        .nav-bar { 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--fundo-claro); 
-            height: 48px; 
-            border-top: 1px solid var(--verde-escuro-fundo);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-        }
-
-        /* --- GRID DE EXPOSIÇÕES --- */
+        /* --- CONTAINER PRINCIPAL --- */
         #main-container { padding: 24px 76px; margin: 0 auto; background: var(--fundo-medio); }
         
+        /* --- LAYOUT DE DESTAQUES --- */
+        .destaques-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .obra-destaque {
+            background: var(--fundo-claro);
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            overflow: hidden;
+            border: 1px solid var(--fundo-medio);
+            transition: border-color 0.3s ease;
+        }
+
+
+        .destaque-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Alterado de cover para contain */
+            filter: grayscale(0%);
+            transition: filter 0.3s ease;
+        }
+
+        .destaque-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(0%);
+            transition: filter 0.3s ease;
+        }
+
+        .obra-destaque.ativo .destaque-img-wrapper img { filter: grayscale(100%); }
+
+        .expo-destaque-info {
+            padding: 24px 32px;
+            color: var(--verde-escuro-fundo);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .badge-destaque {
+            align-self: flex-start;
+            background: var(--verde-vivo);
+            color: var(--verde-escuro-fundo);
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 4px 8px;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .expo-destaque-info strong {
+            font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 6px;
+            letter-spacing: -1px;
+        }
+
+        .expo-destaque-info span {
+            color: var(--verde-medio);
+            font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+            font-weight: 500;
+        }
+
+        .info-destaque {
+            margin-top: 16px;
+            color: var(--verde-escuro);
+            font-size: clamp(0.85rem, 1vw, 0.95rem);
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        .obra-destaque:hover .expo-destaque-info strong,
+        .obra-destaque.ativo .expo-destaque-info strong {
+            text-decoration: underline;
+            text-decoration-color: var(--verde-vivo);
+            text-underline-offset: 0px;
+            text-decoration-thickness: 10px;
+            text-decoration-skip-ink: none;
+        }
+
+        /* --- GRID NORMAL --- */
         .grid-layout { 
             display: grid; 
             grid-template-columns: repeat(3, 1fr); 
@@ -134,7 +211,6 @@
             transition: filter 0.3s ease;
         }
 
-        /* --- INFOS DA THUMBNAIL --- */
         .expo-thumb-info {
             padding: 12px 18px 8px;
             color: var(--verde-escuro-fundo); 
@@ -195,8 +271,10 @@
         .ficha-tecnica { text-align: center; padding: 0 50px 30px; font-size: 0.75rem; line-height: 1.4; }
         .ficha-tecnica strong { display: block; font-size: 1.1rem; margin-bottom: 6px; }
         .ficha-tecnica span { display: block; color: var(--verde-medio); }
+        .ficha-tecnica p { margin-top: 10px; color: var(--verde-escuro); }
+        .ficha-tecnica i { display: block; color: var(--verde-medio); font-style: italic; margin-top: 4px; }
 
-        /* --- LIGHTBOX (Atualizado de Trabalhos) --- */
+        /* --- LIGHTBOX --- */
         #lightbox {
             position: fixed;
             top: 0; 
@@ -256,6 +334,30 @@
         }
 
         /* --- RESPONSIVIDADE --- */
+        @media (min-width: 900px) {
+            .obra-destaque { flex-direction: row; height: 400px; margin-bottom: 24px; }
+            
+            .destaque-img-wrapper { 
+                width: auto; /* A imagem não força mais os 66% fixos */
+                height: 100%; 
+                flex-shrink: 0; /* Impede a imagem de ser esmagada */
+                max-width: 70%; /* Trava de segurança para panoramas não engolirem o texto */
+            }
+            
+            .destaque-img-wrapper img {
+                width: auto; /* A largura se adapta à altura de 400px mantendo a proporção */
+                height: 100%;
+                max-width: 100%;
+                object-fit: contain; 
+            }
+            
+            .expo-destaque-info { 
+                width: auto; 
+                flex-grow: 1; /* Instrui o container a preencher "a largura restante da área total" */
+                padding: 40px 50px; 
+            }
+        }
+
         @media (max-width: 900px) {
             #main-container { padding: 0px 8px; } 
             .desktop-nav { display: none; }
@@ -263,8 +365,11 @@
             .header-top { height: 70px !important; }
             .logo { font-size: 2rem !important; margin-right: 0; }
             .grid-layout { grid-template-columns: repeat(2, 1fr); gap: 8px; } 
+            .destaques-layout { gap: 8px; margin-bottom: 8px; }
             .expo-thumb-info { padding: 12px 12px 8px; letter-spacing: -0.2px; }
+            .expo-destaque-info { padding: 20px; }
             .carousel-view { height: 50vh; }
+            .obra-destaque { flex-direction: column-reverse; margin-bottom: 24px;}
         }
     </style>
 </head>
@@ -285,7 +390,7 @@
                 <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
             </div>
         </div>
-        </header> 
+    </header> 
 
     <div id="menu-full">
         <div onclick="toggleMenu(false)" style="position:absolute; top:20px; right:8vw; font-size:2.4rem; font-weight: 800; cursor:pointer;">✕</div>
@@ -296,7 +401,7 @@
         <a href="bio.html" style="font-size:2.4rem; font-weight: 800;">BIO</a>
     </div>
 
-    <main id="main-container" class="grid-layout"></main>
+    <main id="main-container"></main>
 </div>
 
 <div id="lightbox" onclick="closeLightbox()">
@@ -324,62 +429,113 @@
             console.error("Erro no carregamento:", e);
         }
     }
- 
-function processarDados() {
+
+    function processarDados() {
         const baseThumb = "https://sitesantacosta.github.io/img/thumb/expos/";
         const baseFull = "https://sitesantacosta.github.io/img/full/expos/";
         const baseZoom = "https://sitesantacosta.github.io/img/zoom/expos/";
 
-        // 1. Mapeamos os dados para incluir os caminhos das fotos
         const listaProcessada = rawExpos.map(item => {
-            const arquivos = manifesto.expos[item.PASTA] || [];
+            const todosArquivos = manifesto.expos[item.PASTA] || [];
+            
+            // Separa a imagem destaque (destaque.jpg) das demais imagens da obra
+            const isDestaqueImg = (arq) => arq.toLowerCase() === 'destaque.jpg';
+            const imgDestaque = todosArquivos.find(isDestaqueImg);
+            const arquivosNormais = todosArquivos.filter(arq => !isDestaqueImg(arq));
             
             return {
                 ...item,
-                fotosThumb: arquivos.map(arq => `${baseThumb}${item.PASTA}/${arq}`),
-                fotosFull: arquivos.map(arq => `${baseFull}${item.PASTA}/${arq}`),
-                fotosZoom: arquivos.map(arq => `${baseZoom}${item.PASTA}/${arq}`)
+                imgCapaDestaque: imgDestaque ? `${baseFull}${item.PASTA}/${imgDestaque}` : null,
+                fotosThumb: arquivosNormais.map(arq => `${baseThumb}${item.PASTA}/${arq}`),
+                fotosFull: arquivosNormais.map(arq => `${baseFull}${item.PASTA}/${arq}`),
+                fotosZoom: arquivosNormais.map(arq => `${baseZoom}${item.PASTA}/${arq}`)
             };
         });
 
-        // 2. Retornamos uma cópia invertida (o final do JSON vira o início da página)
         return [...listaProcessada].reverse();
     }
-    
-    
+
     function render(lista) {
         const container = document.getElementById('main-container');
         container.innerHTML = '';
         
-        const colunas = window.innerWidth <= 900 ? 2 : 3;
-        const idxAberto = lista.findIndex(o => o.TEXTO === tituloAberto);
-        const fimLinha = idxAberto !== -1 
-            ? Math.min(Math.floor(idxAberto / colunas) * colunas + (colunas - 1), lista.length - 1) 
-            : -1;
+        const itens = lista.map((expo, i) => ({ expo, idxOriginal: i }));
+        const destaques = itens.filter(item => item.expo.DESTAQUE);
+        const normais = itens.filter(item => !item.expo.DESTAQUE);
 
-        lista.forEach((expo, i) => {
-            const min = document.createElement('div');
-            min.className = `obra-miniatura ${tituloAberto === expo.TEXTO ? 'ativo' : ''}`;
-            
-            // Pega a primeira imagem thumb da pasta para a capa
-            const capa = expo.fotosThumb[0] || '';
-            
-            min.innerHTML = `
-                <div class="thumb-img-wrapper">
-                    ${capa ? `<img src="${capa}" alt="${expo.TEXTO}">` : ''}
-                </div>
-                <div class="expo-thumb-info">
-                    <strong>${expo.TEXTO}</strong>
-                    <span>${expo.LOCAL}</span>
-                </div>
-            `;
-            min.onclick = () => toggleExpo(expo, lista);
-            container.appendChild(min);
+        // --- 1. RENDERIZAÇÃO DOS DESTAQUES ---
+        if (destaques.length > 0) {
+            const destContainer = document.createElement('div');
+            destContainer.className = 'destaques-layout';
+            container.appendChild(destContainer);
 
-            if (i === fimLinha && tituloAberto) {
-                container.appendChild(renderDetalhe(lista[idxAberto], idxAberto));
-            }
-        });
+            destaques.forEach(item => {
+                const dest = document.createElement('div');
+                dest.className = `obra-destaque ${tituloAberto === item.expo.TEXTO ? 'ativo' : ''}`;
+                
+                // Prioridade 1: destaque.jpg, Prioridade 2: Primeira full normal, Prioridade 3: Primeira thumb normal
+                const capa = item.expo.imgCapaDestaque || item.expo.fotosFull[0] || item.expo.fotosThumb[0] || '';
+                
+                // Trata as quebras de linha vindas do JSON/Sheets (\n)
+                const infoDestaqueHTML = item.expo.INFO_DESTAQUE 
+                    ? `<p class="info-destaque">${item.expo.INFO_DESTAQUE.replace(/(?:\r\n|\r|\n|\\n)/g, '<br>')}</p>` 
+                    : '';
+
+                dest.innerHTML = `
+                    <div class="destaque-img-wrapper">
+                        ${capa ? `<img src="${capa}" alt="${item.expo.TEXTO}">` : ''}
+                    </div>
+                    <div class="expo-destaque-info">
+                        <span class="badge-destaque">EM CARTAZ</span>
+                        <strong>${item.expo.TEXTO}</strong>
+                        <span>${item.expo.LOCAL}</span>
+                        ${infoDestaqueHTML}
+                    </div>
+                `;
+                dest.onclick = () => toggleExpo(item.expo, lista);
+                destContainer.appendChild(dest);
+
+                if (tituloAberto === item.expo.TEXTO) {
+                    destContainer.appendChild(renderDetalhe(item.expo, item.idxOriginal));
+                }
+            });
+        }
+
+        // --- 2. RENDERIZAÇÃO DO GRID NORMAL ---
+        if (normais.length > 0) {
+            const gridContainer = document.createElement('div');
+            gridContainer.className = 'grid-layout';
+            container.appendChild(gridContainer);
+
+            const colunas = window.innerWidth <= 900 ? 2 : 3;
+            const idxAbertoNormal = normais.findIndex(item => item.expo.TEXTO === tituloAberto);
+            const fimLinhaNormal = idxAbertoNormal !== -1 
+                ? Math.min(Math.floor(idxAbertoNormal / colunas) * colunas + (colunas - 1), normais.length - 1) 
+                : -1;
+
+            normais.forEach((item, indexNoGrid) => {
+                const min = document.createElement('div');
+                min.className = `obra-miniatura ${tituloAberto === item.expo.TEXTO ? 'ativo' : ''}`;
+                // A capa do grid normal ignora o destaque.jpg porque ele já foi removido em processarDados()
+                const capa = item.expo.fotosThumb[0] || '';
+                
+                min.innerHTML = `
+                    <div class="thumb-img-wrapper">
+                        ${capa ? `<img src="${capa}" alt="${item.expo.TEXTO}">` : ''}
+                    </div>
+                    <div class="expo-thumb-info">
+                        <strong>${item.expo.TEXTO}</strong>
+                        <span>${item.expo.LOCAL}</span>
+                    </div>
+                `;
+                min.onclick = () => toggleExpo(item.expo, lista);
+                gridContainer.appendChild(min);
+
+                if (indexNoGrid === fimLinhaNormal && tituloAberto) {
+                    gridContainer.appendChild(renderDetalhe(normais[idxAbertoNormal].expo, normais[idxAbertoNormal].idxOriginal));
+                }
+            });
+        }
     }
 
     function renderDetalhe(expo, idx) {
@@ -387,6 +543,9 @@ function processarDados() {
         div.className = 'acordeao-container';
         const carouselId = `carousel-${idx}`;
         
+        // Garante suporte para \n na ficha técnica caso venha da planilha
+        const infoHTML = expo.INFO ? `<p>${expo.INFO.replace(/(?:\r\n|\r|\n|\\n)/g, '<br>')}</p>` : '';
+
         div.innerHTML = `
             <div class="carousel-view" id="${carouselId}" onscroll="syncDots('${carouselId}')">
                 ${expo.fotosFull.map((f, i) => `<img src="${f}" onclick="openLightbox(${idx}, ${i})">`).join('')}
@@ -398,7 +557,8 @@ function processarDados() {
             <div class="ficha-tecnica">
                 <strong>${expo.TEXTO}</strong>
                 <span>${expo.LOCAL} | ${expo.CIDADE} | ${expo.DATA}</span>
-                <p style="margin-top:10px; color:var(--verde-escuro)">${expo.INFO}</p>
+                ${infoHTML}
+                ${expo.EN ? `<i>${expo.EN}</i>` : ''}
             </div>
         `;
         return div;
