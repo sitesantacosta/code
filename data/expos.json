@@ -1,6 +1,7 @@
 [
   {
     "PASTA": "2016-over-witty",
+    "DESTAQUE": "",
     "TEXTO": "Over-Witty",
     "LOCAL": "Espaço Qualcasa",
     "CIDADE": "São Paulo, SP",
@@ -12,6 +13,7 @@
   },
   {
     "PASTA": "2017-its-all-over",
+    "DESTAQUE": "",
     "TEXTO": "It's all over",
     "LOCAL": "Theatro Municipal (Salão dos Arcos)",
     "CIDADE": "São Paulo, SP",
@@ -23,6 +25,7 @@
   },
   {
     "PASTA": "2018-26o-slac",
+    "DESTAQUE": "",
     "TEXTO": "26º SLAC",
     "LOCAL": "Museu Histórico de Limeira",
     "CIDADE": "Limeira, SP",
@@ -34,6 +37,7 @@
   },
   {
     "PASTA": "2018-lava",
+    "DESTAQUE": "",
     "TEXTO": "LAVA!",
     "LOCAL": "Residência Fonte",
     "CIDADE": "São Paulo, SP",
@@ -45,6 +49,7 @@
   },
   {
     "PASTA": "2018-sobe-o-sol-ou-a-noite-desce",
+    "DESTAQUE": "",
     "TEXTO": "Sobe o Sol ou a Noite desce?",
     "LOCAL": "VÃO",
     "CIDADE": "São Paulo, SP",
@@ -56,6 +61,7 @@
   },
   {
     "PASTA": "2018-sobreposicao-e-deslocamento",
+    "DESTAQUE": "",
     "TEXTO": "Sobreposição e deslocamento",
     "LOCAL": "MAB (Blumenau)",
     "CIDADE": "Blumenau, SC",
@@ -67,6 +73,7 @@
   },
   {
     "PASTA": "2019-dia-1o-9o-andar",
+    "DESTAQUE": "",
     "TEXTO": "Dia 1º, 9º andar",
     "LOCAL": "Galeria Lamb Arts",
     "CIDADE": "São Paulo, SP",
@@ -78,6 +85,7 @@
   },
   {
     "PASTA": "2019-residencia-w-edicao-5",
+    "DESTAQUE": "",
     "TEXTO": "Residência W - Edição 5",
     "LOCAL": "Residência W",
     "CIDADE": "Ribeirão Preto, SP",
@@ -89,6 +97,7 @@
   },
   {
     "PASTA": "2019-sirva-se-do-que-quiser",
+    "DESTAQUE": "",
     "TEXTO": "Sirva-se do que quiser",
     "LOCAL": "Galeria de Arte e Pesquisa - UFES",
     "CIDADE": "Vitória, ES",
@@ -100,6 +109,7 @@
   },
   {
     "PASTA": "2024-transmutacao",
+    "DESTAQUE": "",
     "TEXTO": "Transmutação",
     "LOCAL": "Massapê Projetos",
     "CIDADE": "São Paulo, SP",
@@ -111,6 +121,7 @@
   },
   {
     "PASTA": "2025-labirinto-mistico",
+    "DESTAQUE": "X",
     "TEXTO": "Labirinto Místico",
     "LOCAL": "Massapê Projetos",
     "CIDADE": "São Paulo, SP",
