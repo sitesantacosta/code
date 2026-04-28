@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SANTACOSTA | bio</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --verde-vivo: #e2ff8f;
+            --verde-escuro: #505a50;
+            --verde-medio: #697369;
+            --fundo-claro: #f5f7f6;
+            --fundo-medio: #e5eae7;
+            --verde-escuro-fundo: #202420;
+            --scroll-ratio: 0; 
+            --gap: 4px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; border-radius: 0 !important; }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--verde-escuro-fundo);
+            display: flex;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #site-wrapper {
+            width: 100%;
+            max-width: 1400px;
+            background-color: var(--fundo-medio);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* --- HEADER DINÂMICO --- */
+        header { 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            background: var(--verde-vivo);
+            border-bottom: 1px solid var(--verde-escuro-fundo);
+        }
+
+        .header-top { 
+            display: flex; 
+            align-items: center; 
+            padding: 0 4vw;
+            height: calc(100px - (var(--scroll-ratio) * 40px));
+        }
+
+        .logo { 
+            font-weight: 800; 
+            cursor: pointer; 
+            letter-spacing: -2px;
+            font-size: calc(4rem - (var(--scroll-ratio) * 1.6rem));
+            margin-right: 40px;
+            line-height: 1;
+            color: var(--verde-escuro-fundo);
+            text-decoration: none;
+        }
+
+        .desktop-nav {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .desktop-nav a {
+            text-decoration: none;
+            color: var(--verde-escuro-fundo);
+            font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+            font-weight: 500;
+            text-transform: uppercase;    
+            transition: border-color 0.1s ease;
+            border-bottom: 1px solid transparent; 
+        }
+
+        .desktop-nav a:hover {
+            text-decoration: underline;
+            text-decoration-color: var(--fundo-claro);
+            text-underline-offset: 0px; 
+            text-decoration-thickness: 10px; 
+            text-decoration-skip-ink: none;
+        }
+
+        .mobile-menu-trigger { display: none; margin-left: auto; cursor: pointer; }
+        .icon-svg { width: 18px; height: 18px; fill: var(--verde-escuro-fundo); transition: transform 0.3s ease; }
+
+        /* --- NAV-BAR (EXCLUSIVO DA BIO) --- */
+        .nav-bar { 
+            display: grid;
+            grid-template-columns: 1fr 60px 1fr; 
+            background: var(--fundo-claro); 
+            height: 48px; 
+            border-top: 1px solid var(--verde-escuro-fundo);
+        }
+
+        .nav-item { 
+            display: flex; align-items: center; justify-content: center; 
+            border-right: 1px solid var(--verde-escuro); 
+            font-size: 0.9rem; text-transform: uppercase;
+            cursor: pointer;
+        }
+        
+        .nav-item:last-child { border-right: none; }
+        .nav-item:hover { background: var(--verde-vivo); }
+
+        /* --- CONTEÚDO BIO --- */
+        #main-container { padding: 60px 20px; max-width: 1000px; margin: 0 auto; }
+        
+        .bio-text {
+            font-size: clamp(0.9rem, 1.8vw, 1.2rem);
+            line-height: 1.6;
+            color: var(--verde-escuro-fundo);
+            margin-bottom: 80px;
+        }
+
+        .cv-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            border-top: 1px solid var(--verde-escuro);
+            padding-top: 40px;
+            scroll-margin-top: 140px;
+        }
+
+        .cv-group h2 {
+            font-size: clamp(0.9rem, 1.8vw, 1.2rem);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--verde-medio);
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--verde-vivo);
+            display: inline-block;
+        }
+
+        .cv-item { font-size: clamp(0.8rem, 1.8vw, 1.1rem); margin-bottom: 12px; display: flex; gap: 15px; line-height: 1.4; letter-spacing:-0.2px; }
+        .cv-year { font-weight: 800; min-width: 45px; color: var(--verde-escuro-fundo); }
+        .cv-desc { color: var(--verde-escuro); }
+
+        /* --- CONTATO E FOTO --- */
+        .contact-wrapper {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: flex-start;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .foto-perfil {
+            max-height: 42vh;
+            width: auto;
+            border-radius: 6px !important;
+            transition: filter 0.5s ease;
+            cursor: default;
+        }
+
+        .contact-links { display: flex; flex-direction: column; gap: 15px; padding-top: 10px; }
+        .contact-links a { 
+            color: var(--verde-escuro-fundo); text-decoration: none; 
+            font-weight: 700; border-bottom: 1px solid var(--verde-vivo);
+            width: fit-content;
+        }
+
+        /* --- MENU FULL (MOBILE) --- */
+        #menu-full { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            background: var(--verde-vivo); z-index: 2000; display: none; 
+            flex-direction: column; justify-content: center; align-items: center; gap: 30px;
+        }
+
+        #menu-full a { 
+            text-decoration: none; color: var(--verde-escuro-fundo); 
+            font-size: 1.5rem; font-weight: 800;
+        }
+
+        /* --- RESPONSIVIDADE --- */
+        @media (max-width: 900px) {
+            .desktop-nav { display: none; }
+            .mobile-menu-trigger { display: block; }
+            .header-top { height: 70px !important; }
+            .logo { font-size: 2rem !important; margin-right: 0; }
+            .nav-bar { grid-template-columns: 1fr 1fr; }
+            .nav-item:nth-child(2) { display: none; }
+            .contact-wrapper { flex-direction: column; align-items: center; text-align: center; }
+            .contact-links { align-items: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="site-wrapper">
+    <header id="dynamic-header">
+        <div class="header-top">
+            <a href="index.html" class="logo">SANTACOSTA</a>
+            <nav class="desktop-nav">
+                <a href="trabalhos.html">TRABALHOS</a>
+                <a href="expos.html">EXPOSIÇÕES</a>
+                <a href="textos.html">TEXTOS</a>
+                <a href="noticias.html">NOTÍCIAS</a>
+                <a style="font-weight: 400; cursor: default; color: var(--verde-medio)">BIO</a>
+            </nav>
+            
+            <div class="mobile-menu-trigger" onclick="toggleMenu(true)">
+                <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+            </div>
+        </div>
+        <div class="nav-bar">
+            <div class="nav-item" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">BIO</div>
+            <div class="nav-item" style="cursor: default; background: transparent !important;"></div>
+            <div class="nav-item" onclick="document.getElementById('cv-alvo').scrollIntoView({behavior: 'smooth'})">CV</div>
+        </div>
+    </header>
+
+    <div id="menu-full">
+        <div onclick="toggleMenu(false)" style="position:absolute; top:20px; right:8vw; font-size:2.4rem; font-weight: 800; cursor:pointer;">✕</div>
+        <a href="trabalhos.html">TRABALHOS</a>
+        <a href="expos.html">EXPOSIÇÕES</a>
+        <a href="textos.html">TEXTOS</a>
+        <a href="noticias.html">NOTÍCIAS</a>
+        <a href="#" onclick="toggleMenu(false); window.scrollTo({top: 0, behavior: 'smooth'})">BIO</a>
+    </div>
+
+    <main id="main-container">
+        <section class="bio-text">
+            Santacosta, 1983, São Paulo, onde vive e mantém seu ateliê em Massapê Projetos, tem formação em Design de Moda pela Universidade Anhembi Morumbi e Artes Visuais pela FAAP. Seu trabalho aborda aspectos de desgastes pós-industriais, destacando o cotidiano por meio de colagens que evidenciam contrastes e tensões, além de refletir questões sociais locais nos materiais utilizados. Através de assemblages de itens consumidos pelo uso ou tempo, seu trabalho explora as nuances entre o que foi feito pela natureza e pelo homem, e assim sugere transmutação, ressignificação e também um viés psicológico em suas composições. Expôs suas obras em diversas instituições no Brasil e internacionalmente, participou das residências artísticas Fonte e W e realizou em 2021 uma exposição retrospectiva de 10 anos de carreira em São Paulo. Suas obras estão presentes nas coleções públicas MAB-FAAP, Prefeitura de Santo André e também em coleções particulares em diversas cidades do Brasil e em Hong Kong, Basel e Londres.        
+        </section>
+
+        <div class="cv-grid" id="cv-alvo">
+            <div class="cv-group">
+                <h2>Exposições individuais</h2>
+                <div class="cv-item"><span class="cv-year">2025</span><span class="cv-desc">Labirinto Místico - Massapê Projetos, SP</span></div>
+                <div class="cv-item"><span class="cv-year">2024</span><span class="cv-desc">Transmutação - diálogo com Felipe Seixas - Massapê Projetos, SP</span></div>
+                <div class="cv-item"><span class="cv-year">2021</span><span class="cv-desc">Seleção 10 anos - Espaço YGB, SP</span></div>
+                <div class="cv-item"><span class="cv-year">2016</span><span class="cv-desc">Over Witty - Espaço Qualcasa, SP</span></div> 
+                <br>
+                <h2>Exposições coletivas selecionadas</h2>
+                <div class="cv-item"><span class="cv-year">2026</span><span class="cv-desc">17º Salão dos Artistas sem galeria - Zipper SP</span></div>
+                <div class="cv-item"><span class="cv-year">2025</span><span class="cv-desc">54º Salão de Artes Piracicaba</span></div>
+                <div class="cv-item"><span class="cv-year">2024</span><span class="cv-desc">51º Salão de Artes Luis Sacilotto - Santo André</span></div>
+                <div class="cv-item"><span class="cv-year">2022</span><span class="cv-desc">14º Grande exposição de Arte Bunkyo, São Paulo</span></div>
+                <div class="cv-item"><span class="cv-year">2021</span><span class="cv-desc">26º Salão de Artes de Vinhedo</span></div>
+                <div class="cv-item"><span class="cv-year">2020</span><span class="cv-desc">18˚ Programa de Exposições MARP, Ribeirão Preto</span></div>
+                <div class="cv-item"><span class="cv-year">2019</span><span class="cv-desc">Sirva-se do que quiser - Galeria de Arte e Pesquisa da UFES, Vitória</span></div>
+                <div class="cv-item"><span class="cv-year">2018</span><span class="cv-desc">46˚ Salão de Arte de Santo André</span></div>
+                <div class="cv-item"><span class="cv-year">2017</span><span class="cv-desc">Red Scream - Theatro Municipal, São Paulo</span></div>
+                <div class="cv-item"><span class="cv-year">2015</span><span class="cv-desc">13˚ Programa de exposições MARP, Ribeirão Preto</span></div>
+                <div class="cv-item"><span class="cv-year">2014</span><span class="cv-desc">Arte Londrina 3 - DAP UEL, Londrina</span></div>
+                <div class="cv-item"><span class="cv-year">2013</span><span class="cv-desc">44ª Anual de Artes da FAAP, São Carlos</span></div>
+                <div class="cv-item"><span class="cv-year">2012</span><span class="cv-desc">Code +55 Brazilian Art Now, Hong Kong</span></div>
+                <div class="cv-item"><span class="cv-year">2011</span><span class="cv-desc">43ª Anual de Artes da FAAP, São Paulo</span></div>
+            </div>
+
+            <div class="cv-group">
+                <h2>Prêmios e Residências</h2>
+                <div class="cv-item"><span class="cv-year">2022</span><span class="cv-desc">Menção Honrosa, 14ª Grande Exposição Bunkyo, SP</span></div>
+                <div class="cv-item"><span class="cv-year">2022</span><span class="cv-desc">Projeto 'Na Varanda' Casa de Cultura do Parque</span></div>
+                <div class="cv-item"><span class="cv-year">2019</span><span class="cv-desc">W residência, Ribeirão Preto</span></div>
+                <div class="cv-item"><span class="cv-year">2018</span><span class="cv-desc">Projeto Lava - Residência Fonte, SP</span></div>
+                <div class="cv-item"><span class="cv-year">2018</span><span class="cv-desc">Prêmio aquisição - 46º Salão Santo André</span></div>
+                <div class="cv-item"><span class="cv-year">2014</span><span class="cv-desc">Medalha de ouro escultura 22o Salão Mococa</span></div>
+                <div class="cv-item"><span class="cv-year">2012</span><span class="cv-desc">Aquisição da 43˚ Anual de Artes da FAAP, SP</span></div>
+
+                <div class="contact-wrapper">
+                    <img id="foto-santacosta" class="foto-perfil" src="https://raw.githubusercontent.com/umpedrogallego/site/main/z-testes/foto_perfil_santacosta_2026.jpeg" onclick="togglePB(this)">
+                    <div class="contact-links">
+                        <a href="https://www.instagram.com/santacosta.art/" target="_blank">@santacosta.art</a>
+                        <span>r.santacosta@gmail.com</span>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </main>
+</div>
+ 
+<script>
+    // Controle do Scroll Fluido para o Header Shrink
+    window.onscroll = () => {
+        const scrollThreshold = 380; 
+        const ratio = Math.min(window.scrollY / scrollThreshold, 1);
+        document.documentElement.style.setProperty('--scroll-ratio', ratio);
+    };
+ 
+    function toggleMenu(open) { 
+        document.getElementById('menu-full').style.display = open ? 'flex' : 'none'; 
+    }
+
+    function togglePB(el) {
+        // Alterna entre o estado original e o filtro de escala de cinza
+        if (el.style.filter === "grayscale(100%)") {
+            el.style.filter = "grayscale(0%)";
+        } else {
+            el.style.filter = "grayscale(100%)";
+        }
+    }
+</script>
+</body>
+</html>
