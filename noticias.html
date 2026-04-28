@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SANTACOSTA | notícias</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --verde-vivo: #e2ff8f;
+            --verde-escuro: #505a50;
+            --verde-medio: #697369;
+            --fundo-claro: #f5f7f6;
+            --fundo-medio: #e5eae7;
+            --verde-escuro-fundo: #202420;
+            --scroll-ratio: 0;
+            --gap: 4px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; border-radius: 0 !important; }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--verde-escuro-fundo);
+            display: flex;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #site-wrapper {
+            width: 100%;
+            max-width: 1400px;
+            background-color: var(--fundo-medio);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* --- HEADER DINÂMICO --- */
+        header { 
+            position: sticky;
+            top: 0; 
+            z-index: 1000; 
+            background: var(--verde-vivo);
+            border-bottom: 1px solid var(--verde-escuro-fundo);
+        }
+
+        .header-top { 
+            display: flex; 
+            align-items: center; 
+            padding: 0 4vw;
+            height: calc(100px - (var(--scroll-ratio) * 40px));
+        }
+
+        .logo { 
+            font-weight: 800;
+            cursor: pointer; 
+            letter-spacing: -2px;
+            font-size: calc(4rem - (var(--scroll-ratio) * 1.6rem));
+            margin-right: 40px;
+            line-height: 1;
+            color: var(--verde-escuro-fundo);
+            text-decoration: none;
+        }
+
+        .desktop-nav {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .desktop-nav a {
+            text-decoration: none;
+            color: var(--verde-escuro-fundo);
+            font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+            font-weight: 500;
+            text-transform: uppercase;    
+            transition: border-color 0.1s ease;
+            border-bottom: 1px solid transparent;
+        }
+
+        .desktop-nav a:hover {
+            text-decoration: underline;
+            text-decoration-color: var(--fundo-claro);
+            text-underline-offset: 0px;
+            text-decoration-thickness: 10px;
+            text-decoration-skip-ink: none;
+        }
+
+        .mobile-menu-trigger { display: none; margin-left: auto; cursor: pointer; }
+        .icon-svg { width: 18px; height: 18px; fill: var(--verde-escuro-fundo); transition: transform 0.3s ease; }
+
+        /* --- CONTEÚDO NOTÍCIAS (Padrão Destaque Exposições) --- */
+        #main-container { 
+            padding: 24px 76px; 
+            margin: 0 auto; 
+            background: var(--fundo-medio);
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .news-entry {
+            background: var(--fundo-claro);
+            display: flex;
+            flex-direction: column; /* Volta para o padrão original: Imagem acima do texto */
+            overflow: hidden;
+        }
+
+        .news-image-wrapper {
+            width: 100%;
+            height: 50vw;
+            max-height: 450px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .news-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Garante que a imagem não sofra crop */
+            cursor: zoom-in;     /* Único cursor ativo no bloco */
+        }
+
+        .news-content {
+            padding: 24px 32px;
+            color: var(--verde-escuro-fundo);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .news-title {
+            font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 6px;
+            letter-spacing: -1px;
+            color: var(--verde-escuro-fundo);
+        }
+
+        .news-description {
+            margin-top: 16px;
+            color: var(--verde-escuro);
+            font-size: clamp(0.85rem, 1vw, 0.95rem);
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        /* --- LIGHTBOX --- */
+        #lightbox {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: rgba(32, 36, 32, 0.94); z-index: 3000;
+            display: none; justify-content: center; align-items: center;
+        }
+        #lightbox img { max-width: 94vw; max-height: 94vh; object-fit: contain; }
+        .close-lb { position: absolute; top:18px; right:60px; font-size: 1.3rem; color: var(--verde-vivo); cursor: pointer; font-weight: 500; }
+
+        /* --- MENU FULL --- */
+        #menu-full { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            background: var(--verde-vivo); z-index: 2000; display: none; 
+            flex-direction: column; justify-content: center; align-items: center; gap: 30px;
+        }
+        #menu-full a { text-decoration: none; color: var(--verde-escuro-fundo); font-size: 1.5rem; font-weight: 800; }
+
+        /* --- RESPONSIVIDADE --- */
+        @media (min-width: 900px) {
+            .news-entry { 
+                flex-direction: row; 
+                height: 400px; 
+            }
+            .news-image-wrapper { 
+                width: auto; 
+                height: 100%; 
+                flex-shrink: 0; 
+                max-width: 70%; /* Trava para panoramas muito longos */
+            }
+            .news-image-wrapper img {
+                width: auto; 
+                height: 100%;
+                max-width: 100%;
+                object-fit: contain; 
+            }
+            .news-content { 
+                width: auto; 
+                flex-grow: 1; /* Preenche a largura orgânica restante */
+                padding: 40px 50px; 
+            }
+        }
+
+        @media (max-width: 900px) {
+            #main-container { padding: 0px 8px; gap: 38px; } /* Restaura o distanciamento original entre as notícias */
+            .news-content { padding: 30px 20px; }
+            .news-image-wrapper { 
+                height: auto; 
+                width: 88vw; 
+                margin: 0 auto; 
+                margin-top: 18px; 
+                border-bottom: none; 
+            }
+            .news-image-wrapper img { max-height: 60vh; }
+            .desktop-nav { display: none; }
+            .mobile-menu-trigger { display: block; }
+            .header-top { height: 70px !important; }
+            .logo { font-size: 2.2rem !important; margin-right: 0;}
+        }
+    </style>
+</head>
+<body>
+
+<div id="site-wrapper">
+    <header id="dynamic-header">
+        <div class="header-top">
+            <a href="index.html" class="logo">SANTACOSTA</a>
+            <nav class="desktop-nav">
+                <a href="trabalhos.html">TRABALHOS</a>
+                <a href="expos.html">EXPOSIÇÕES</a>
+                <a href="textos.html">TEXTOS</a>
+                <a style="font-weight: 400; cursor: default; color: var(--verde-medio)">NOTÍCIAS</a>
+                <a href="bio.html">BIO</a>
+            </nav>
+            <div class="mobile-menu-trigger" onclick="toggleMenu(true)">
+                <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+            </div>
+        </div>
+    </header>
+
+    <div id="menu-full">
+        <div onclick="toggleMenu(false)" style="position:absolute; top:20px; right:8vw; font-size:2.4rem; font-weight: 800; cursor:pointer;">✕</div>
+        <a href="trabalhos.html">TRABALHOS</a>
+        <a href="expos.html">EXPOSIÇÕES</a>
+        <a href="textos.html">TEXTOS</a>
+        <a href="#" onclick="toggleMenu(false)">NOTÍCIAS</a>
+        <a href="bio.html">BIO</a>
+    </div>
+
+    <main id="main-container">
+        </main>
+
+    <div id="lightbox" onclick="closeLightbox()">
+        <div class="close-lb" onclick="closeLightbox()">✕</div>
+        <img id="lb-img" src="" onclick="event.stopPropagation()">
+    </div>
+</div>
+
+<script>
+    let rawNoticias = [];
+    const baseThumb = "https://sitesantacosta.github.io/img/thumb/noticias/todas/";
+    const baseFull = "https://sitesantacosta.github.io/img/full/noticias/todas/";
+
+    async function init() {
+        try {
+            // Busca simultânea do JSON de dados e do manifesto de imagens
+            const [resNoticias, resManifesto] = await Promise.all([
+                fetch('https://sitesantacosta.github.io/code/data/noticias.json?v=' + Date.now()),
+                fetch('https://sitesantacosta.github.io/img/manifesto.json?v=' + Date.now())
+            ]);
+            
+            rawNoticias = await resNoticias.json();
+            const manifesto = await resManifesto.json();
+            
+            // Inverte a ordem para mostrar as mais recentes primeiro
+            const sortedNoticias = [...rawNoticias].reverse();
+            renderNoticias(sortedNoticias, manifesto);
+        } catch (e) {
+            console.error("Erro ao carregar notícias ou manifesto:", e);
+        }
+    }
+
+    function renderNoticias(noticias, manifesto) {
+        const container = document.getElementById('main-container');
+        container.innerHTML = '';
+
+        // Extrai a lista de arquivos da pasta notícias no manifesto
+        let arquivosNoticias = [];
+        if (manifesto.noticias) {
+            // Suporta tanto Array direto quanto Objeto com "todas"
+            arquivosNoticias = Array.isArray(manifesto.noticias) ? manifesto.noticias : (manifesto.noticias.todas || []);
+        }
+
+        noticias.forEach((noticia) => {
+            const article = document.createElement('article');
+            article.className = 'news-entry';
+
+            // Pega o nome do arquivo sem extensão da coluna PASTA (ex: 'revista-dardo')
+            const baseName = noticia.PASTA.split('.')[0];
+            
+            // Procura o arquivo correspondente no manifesto para garantir a extensão correta (.jpg, .jpeg, etc)
+            const actualFileName = arquivosNoticias.find(arq => arq.startsWith(baseName)) || noticia.PASTA;
+
+            const imgSrcThumb = `${baseThumb}${actualFileName}`;
+            const imgSrcFull = `${baseFull}${actualFileName}`;
+            
+            // Tratamento de quebras de linha para a descrição
+            const infoHTML = noticia.INFO ? noticia.INFO.replace(/(?:\r\n|\r|\n|\\n)/g, '<br>') : '';
+
+            article.innerHTML = `
+                <div class="news-image-wrapper">
+                    <img src="${imgSrcThumb}" onclick="openLightbox('${imgSrcFull}')" alt="${noticia.TITULO}">
+                </div>
+                <div class="news-content">
+                    <strong class="news-title">${noticia.TITULO}</strong>
+                    ${infoHTML ? `<p class="news-description">${infoHTML}</p>` : ''}
+                </div>
+            `;
+
+            container.appendChild(article);
+        });
+    }
+
+    // --- LIGHTBOX e UI ---
+    let lightboxAberto = false;
+
+    window.onscroll = () => {
+        const scrollThreshold = 380; 
+        const ratio = Math.min(window.scrollY / scrollThreshold, 1);
+        document.documentElement.style.setProperty('--scroll-ratio', ratio);
+    };
+
+    function toggleMenu(open) { 
+        document.getElementById('menu-full').style.display = open ? 'flex' : 'none'; 
+    }
+
+    function openLightbox(src) {
+        document.getElementById('lb-img').src = src;
+        document.getElementById('lightbox').style.display = 'flex';
+        lightboxAberto = true;
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
+        lightboxAberto = false;
+        document.getElementById('lb-img').src = ''; // Limpa a imagem ao fechar
+    }
+
+    window.addEventListener('keydown', (e) => { 
+        if (e.key === 'Escape' && lightboxAberto) { 
+            closeLightbox();
+        } 
+    });
+
+    init();
+</script>
+</body>
+</html>
