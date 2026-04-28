@@ -118,14 +118,14 @@
   },
   {
     "PASTA": "2024-transmutacao",
-    "DESTAQUE": "X",
+    "DESTAQUE": "",
     "TEXTO": "Transmutação",
     "LOCAL": "Massapê Projetos",
     "INFO_DESTAQUE": "",
     "CIDADE": "São Paulo, SP",
     "ANO": 2024,
     "DATA": "Julho de 2024",
-    "INFO": "",
+    "INFO": "Exposição individual em diálogo com Felipe Seixas",
     "EN": "",
     "IMGS": 5
   },
@@ -138,7 +138,7 @@
     "CIDADE": "São Paulo, SP",
     "ANO": 2025,
     "DATA": "Agosto e Setembro de 2025",
-    "INFO": "diálogo com Felipe Seixas<br>Texto crítico: Ícaro Ferraz",
+    "INFO": "Texto crítico: Ícaro Ferraz Vidal Jr.",
     "EN": "",
     "IMGS": 8
   }
