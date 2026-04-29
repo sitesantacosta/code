@@ -35,7 +35,6 @@
             position: relative;
         }
 
-        /* --- HEADER --- */
         header { 
             position: sticky; 
             top: 0; 
@@ -99,7 +98,6 @@
             text-transform: uppercase;
         }
 
-        /* --- GRID --- */
         #main-container { padding: 24px 76px; margin: 0 auto; background: var(--fundo-medio); }
         
         .grid-layout { 
@@ -166,7 +164,6 @@
         .obra-miniatura:hover img { filter: grayscale(0%); }
         .obra-miniatura.ativo img { filter: grayscale(100%); }
 
-        /* --- ACORDEÃO --- */
         .acordeao-container { 
             grid-column: 1 / -1; 
             background: var(--fundo-claro); 
@@ -195,7 +192,6 @@
         .ficha-tecnica span { display: block; color: var(--verde-medio); }
         .ficha-tecnica i { display: block; color: var(--verde-medio); font-style: italic; margin-top: 4px; }
 
-        /* --- LIGHTBOX --- */
         #lightbox {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -232,7 +228,6 @@
             cursor: pointer; z-index: 3001; font-weight: 500;
         }
 
-        /* --- MENU MOBILE --- */
         #menu-full { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
             background: var(--verde-vivo); z-index: 2000; display: none; 
@@ -307,7 +302,7 @@
 
             render(dadosTrabalhos);
 
-            // LOGICA DEEP LINK: Verifica se existe um hash na URL ao carregar
+            // LOGICA DEEP LINK: Verifica o hash ao carregar
             const hash = window.location.hash.replace('#', '');
             if (hash) {
                 const obraParaAbrir = dadosTrabalhos.find(o => o.PASTA === hash);
@@ -395,11 +390,9 @@
     function toggleObra(obra, lista, isInitial = false) {
         if (obraAberta === obra.PASTA) {
             obraAberta = null;
-            // Limpa o hash da URL ao fechar
             history.pushState(null, null, window.location.pathname);
         } else {
             obraAberta = obra.PASTA;
-            // Atualiza o hash da URL ao abrir (sem causar scroll indesejado do navegador)
             history.pushState(null, null, `#${obra.PASTA}`);
         }
         
