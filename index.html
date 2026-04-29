@@ -273,7 +273,7 @@
     // --- BUSCA DE EXPOSIÇÃO EM DESTAQUE E INJEÇÃO DO BANNER ---
     async function carregarDestaque() {
         try {
-            const response = await fetch('https://sitesantacosta.github.io/code/data/expos.json?v=' + Date.now());
+            const response = await fetch('/data/expos.json?v=' + Date.now());
             const expos = await response.json();
             const emCartaz = expos.find(e => e.DESTAQUE);
 

@@ -418,7 +418,7 @@
     async function init() {
         try {
             const [resExpos, resManifesto] = await Promise.all([
-                fetch('https://sitesantacosta.github.io/code/data/expos.json?v=' + Date.now()),
+                fetch('/data/expos.json?v=' + Date.now()),
                 fetch('https://sitesantacosta.github.io/img/manifesto.json?v=' + Date.now())
             ]);
             

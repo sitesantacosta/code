@@ -377,7 +377,7 @@ justify-content: center;
         try {
             // Chamada paralela para os dois JSONs
             const [resObras, resManifesto] = await Promise.all([
-                fetch('https://sitesantacosta.github.io/code/data/trabalhos.json?v=' + Date.now()),
+                fetch('/data/trabalhos.json?v=' + Date.now()),
                 fetch('https://sitesantacosta.github.io/img/manifesto.json?v=' + Date.now())
             ]);
             

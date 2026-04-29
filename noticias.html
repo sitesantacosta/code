@@ -255,7 +255,7 @@
         try {
             // Busca simultânea do JSON de dados e do manifesto de imagens
             const [resNoticias, resManifesto] = await Promise.all([
-                fetch('https://sitesantacosta.github.io/code/data/noticias.json?v=' + Date.now()),
+                fetch('/data/noticias.json?v=' + Date.now()),
                 fetch('https://sitesantacosta.github.io/img/manifesto.json?v=' + Date.now())
             ]);
             
