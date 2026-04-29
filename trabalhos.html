@@ -384,8 +384,19 @@ justify-content: center;
             rawObras = await resObras.json();
             manifesto = await resManifesto.json();
 
-            render(processarDados());
+            const dadosProcessados = processarDados();
+            render(dadosProcessados);
             renderDropdownCat();
+
+            // LOGICA DEEP LINK: Verifica se existe um hash na URL ao carregar a página
+            const hash = window.location.hash.replace('#', '');
+            if (hash) {
+                const obraParaAbrir = dadosProcessados.find(o => o.PASTA === hash);
+                if (obraParaAbrir) {
+                    // O "true" no final avisa que é a abertura inicial da página
+                    setTimeout(() => toggleObra(obraParaAbrir, dadosProcessados, true), 100);
+                }
+            }
         } catch (e) {
             console.error("Erro no carregamento:", e);
         }
@@ -486,13 +497,23 @@ function openLightbox(obraIdx, fotoIdx) {
 
     function closeLightbox() { document.getElementById('lightbox').style.display = 'none'; }
 
-    function toggleObra(obra, lista) {
+    function toggleObra(obra, lista, isInitial = false) {
         tituloAberto = tituloAberto === obra.TITULO ? null : obra.TITULO;
+        
+        // LÓGICA DEEP LINK: Atualiza a URL dinamicamente sem recarregar a página
+        if (tituloAberto) {
+            history.replaceState(null, null, `#${obra.PASTA}`);
+        } else {
+            history.replaceState(null, null, window.location.pathname);
+        }
+
         render(lista);
+        
         if (tituloAberto) {
             setTimeout(() => {
                 const acordeao = document.querySelector('.acordeao-container');
-                if(acordeao) window.scrollTo({ top: acordeao.offsetTop - 140, behavior: 'smooth' });
+                // Se for carregamento via URL (isInitial), rola a tela instantaneamente. Se for clique, rola suave.
+                if(acordeao) window.scrollTo({ top: acordeao.offsetTop - 140, behavior: isInitial ? 'instant' : 'smooth' });
             }, 140);
         }
     }
