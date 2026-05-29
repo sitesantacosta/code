@@ -452,44 +452,74 @@ background: var(--verde-vivo);
 </div>
  
 <script>
-    // Controle do Scroll (v4 Fidelity)
+    // 1. HELPER: Cria um "slug" (texto-sem-acento-e-espaco) a partir do título do texto
+    function getSlug(header) {
+        const texto = header.querySelector('.titulo-texto').innerText;
+        return texto.toLowerCase()
+                    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove acentos
+                    .replace(/[^a-z0-9]+/g, '-')                      // Troca espaços e quebras por hífen
+                    .replace(/(^-|-$)/g, '');                         // Limpa hífens nas pontas
+    }
+
+    // 2. CARREGAMENTO INICIAL (DEEP LINK)
+    window.addEventListener('DOMContentLoaded', () => {
+        const hash = window.location.hash.replace('#', '');
+        if (hash) {
+            const headers = document.querySelectorAll('.texto-header');
+            for (let header of headers) {
+                if (getSlug(header) === hash) {
+                    // Delay para garantir que fontes e margens renderizaram antes do scroll
+                    setTimeout(() => toggleTexto(header, true), 100);
+                    break;
+                }
+            }
+        }
+    });
+
+    // 3. CONTROLE DE SCROLL ORIGINAL (v4 Fidelity)
     window.onscroll = () => {
         const scrollThreshold = 380;
         const ratio = Math.min(window.scrollY / scrollThreshold, 1);
         document.documentElement.style.setProperty('--scroll-ratio', ratio);
     };
     
-        function toggleMenu(open) { 
+    function toggleMenu(open) { 
         document.getElementById('menu-full').style.display = open ? 'flex' : 'none'; 
     }
 
-    // Função de Acordeão (Abrir/Fechar Textos)
-function toggleTexto(header) {
-    const corpo = header.nextElementSibling;
-    const todosOsCorpos = document.querySelectorAll('.texto-corpo');
-    const todosOsHeaders = document.querySelectorAll('.texto-header');
-    const jaEstavaAberto = corpo.classList.contains('aberto');
+    // 4. FUNÇÃO ACORDEÃO (Atualizada com a lógica de URL)
+    function toggleTexto(header, isInitial = false) {
+        const corpo = header.nextElementSibling;
+        const todosOsCorpos = document.querySelectorAll('.texto-corpo');
+        const todosOsHeaders = document.querySelectorAll('.texto-header');
+        const jaEstavaAberto = corpo.classList.contains('aberto');
 
-    // 1. Reseta tudo (Exclusividade: apenas um aberto e um ativo por vez)
-    todosOsCorpos.forEach(t => t.classList.remove('aberto'));
-    todosOsHeaders.forEach(h => h.classList.remove('ativo'));
+        // Reseta tudo (Exclusividade: apenas um aberto e um ativo por vez)
+        todosOsCorpos.forEach(t => t.classList.remove('aberto'));
+        todosOsHeaders.forEach(h => h.classList.remove('ativo'));
 
-    if (!jaEstavaAberto) {
-        // 2. Ativa o atual
-        corpo.classList.add('aberto');
-        header.classList.add('ativo');
+        if (!jaEstavaAberto) {
+            // Ativa o atual
+            corpo.classList.add('aberto');
+            header.classList.add('ativo');
 
-        // 3. Scroll Seco
-        const headerHeight = document.querySelector('header').offsetHeight;
-        const elementPosition = header.getBoundingClientRect().top + window.scrollY;
-        const offsetPosition = elementPosition - headerHeight;
+            // DEEP LINK: Adiciona o slug na URL
+            history.replaceState(null, null, '#' + getSlug(header));
 
-        window.scrollTo({
-            top: offsetPosition,
-            behavior: 'instant'
-        });
+            // Scroll Seco
+            const headerHeight = document.querySelector('header').offsetHeight;
+            const elementPosition = header.getBoundingClientRect().top + window.scrollY;
+            const offsetPosition = elementPosition - headerHeight;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'instant'
+            });
+        } else {
+            // DEEP LINK: Limpa a URL se o usuário fechar o texto
+            history.replaceState(null, null, window.location.pathname);
+        }
     }
-}
 </script>
 
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v67327c56f0bb4ef8b305cae61679db8f1769101564043" integrity="sha512-rdcWY47ByXd76cbCFzznIcEaCN71jqkWBBqlwhF1SY7KubdLKZiEGeP7AyieKZlGP9hbY/MhGrwXzJC/HulNyg==" data-cf-beacon='{"version":"2024.11.0","token":"f27ea51c9a684f4fbfb255dbc4c4de38","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
