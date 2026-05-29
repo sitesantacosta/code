@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SANTACOSTA | bio</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --verde-vivo: #e2ff8f;
+            --verde-escuro: #505a50;
+            --verde-medio: #697369;
+            --fundo-claro: #f5f7f6;
+            --fundo-medio: #e5eae7;
+            --verde-escuro-fundo: #202420;
+            --scroll-ratio: 0; 
+            --gap: 4px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; border-radius: 0 !important; }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--verde-escuro-fundo);
+            display: flex;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #site-wrapper {
+            width: 100%;
+            max-width: 1400px;
+            background-color: var(--fundo-medio);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* --- HEADER DINÂMICO --- */
+        header { 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            background: var(--verde-vivo);
+            border-bottom: 1px solid var(--verde-escuro-fundo);
+        }
+
+        .header-top { 
+            display: flex; 
+            align-items: center; 
+            padding: 0 4vw;
+            height: calc(100px - (var(--scroll-ratio) * 40px));
+        }
+
+        .logo { 
+            font-weight: 800; 
+            cursor: pointer; 
+            letter-spacing: -2px;
+            font-size: calc(4rem - (var(--scroll-ratio) * 1.6rem));
+            margin-right: 40px;
+            line-height: 1;
+            color: var(--verde-escuro-fundo);
+            text-decoration: none;
+        }
+
+        .desktop-nav {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .desktop-nav a {
+            text-decoration: none;
+            color: var(--verde-escuro-fundo);
+            font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+            font-weight: 500;
+            text-transform: uppercase;    
+            transition: border-color 0.1s ease;
+            border-bottom: 1px solid transparent; 
+        }
+
+        .desktop-nav a:hover {
+            text-decoration: underline;
+            text-decoration-color: var(--fundo-claro);
+            text-underline-offset: 0px; 
+            text-decoration-thickness: 10px; 
+            text-decoration-skip-ink: none;
+        }
+
+        .mobile-menu-trigger { display: none; margin-left: auto; cursor: pointer; }
+        .icon-svg { width: 18px; height: 18px; fill: var(--verde-escuro-fundo); transition: transform 0.3s ease; }
+
+        /* --- NAV-BAR (EXCLUSIVO DA BIO) --- */
+        .nav-bar { 
+            display: grid;
+            grid-template-columns: 1fr 60px 1fr; 
+            background: var(--fundo-claro); 
+            height: 48px; 
+            border-top: 1px solid var(--verde-escuro-fundo);
+        }
+
+        .nav-item { 
+            display: flex; align-items: center; justify-content: center; 
+            border-right: 1px solid var(--verde-escuro); 
+            font-size: 0.9rem; text-transform: uppercase;
+            cursor: pointer;
+        }
+        
+        .nav-item:last-child { border-right: none; }
+        .nav-item:hover { background: var(--verde-vivo); }
+
+        /* --- CONTEÚDO BIO --- */
+        #main-container { padding: 60px 20px; max-width: 1000px; margin: 0 auto; }
+        
+        .bio-text {
+            font-size: clamp(0.9rem, 1.8vw, 1.2rem);
+            line-height: 1.6;
+            color: var(--verde-escuro-fundo);
+            margin-bottom: 80px;
+        }
+
+        .cv-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            border-top: 1px solid var(--verde-escuro);
+            padding-top: 40px;
+            scroll-margin-top: 140px;
+        }
+
+        .cv-group h2 {
+            font-size: clamp(0.9rem, 1.8vw, 1.2rem);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--verde-medio);
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--verde-vivo);
+            display: inline-block;
+        }
+
+        .cv-item { font-size: clamp(0.8rem, 1.8vw, 1.1rem); margin-bottom: 12px; display: flex; gap: 15px; line-height: 1.4; letter-spacing:-0.2px; }
+        .cv-year { font-weight: 800; min-width: 45px; color: var(--verde-escuro-fundo); }
+        .cv-desc { color: var(--verde-escuro); }
+
+        /* --- CONTATO E FOTO --- */
+        .contact-wrapper {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: flex-start;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .foto-perfil {
+            max-height: 42vh;
+            width: auto;
+            border-radius: 6px !important;
+            transition: filter 0.5s ease;
+            cursor: default;
+        }
+
+        .contact-links { display: flex; flex-direction: column; gap: 15px; padding-top: 10px; }
+        .contact-links a { 
+            color: var(--verde-escuro-fundo); text-decoration: none; 
+            font-weight: 700; border-bottom: 1px solid var(--verde-vivo);
+            width: fit-content;
+        }
+
+        /* --- MENU FULL (MOBILE) --- */
+        #menu-full { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            background: var(--verde-vivo); z-index: 2000; display: none; 
+            flex-direction: column; justify-content: center; align-items: center; gap: 30px;
+        }
+
+        #menu-full a { 
+            text-decoration: none; color: var(--verde-escuro-fundo); 
+            font-size: 1.5rem; font-weight: 800;
+        }
+
+        /* --- RESPONSIVIDADE --- */
+        @media (max-width: 900px) {
+            .desktop-nav { display: none; }
+            .mobile-menu-trigger { display: block; }
+            .header-top { height: 70px !important; }
+            .logo { font-size: 2rem !important; margin-right: 0; }
+            .nav-bar { grid-template-columns: 1fr 1fr; }
+            .nav-item:nth-child(2) { display: none; }
+            .contact-wrapper { flex-direction: column; align-items: center; text-align: center; }
+            .contact-links { align-items: center; }
+        }
+</style>
+</head>
+<body>
+
+<div id="site-wrapper">
+    <header id="dynamic-header">
+        <div class="header-top">
+            <a href="index.html" class="logo">SANTACOSTA</a>
+            <nav class="desktop-nav">
+                <a href="trabalhos.html">TRABALHOS</a>
+                <a href="expos.html">EXPOSIÇÕES</a>
+                <a href="textos.html">TEXTOS</a>
+                <a href="noticias.html">NOTÍCIAS</a>
+                <a style="font-weight: 400; cursor: default; color: var(--verde-medio)">BIO</a>
+            </nav>
+            
+            <div class="mobile-menu-trigger" onclick="toggleMenu(true)">
+                <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+            </div>
+        </div>
+        <div class="nav-bar">
+            <div class="nav-item" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">BIO</div>
+            <div class="nav-item" style="cursor: default; background: transparent !important;"></div>
+            <div class="nav-item" onclick="document.getElementById('cv-alvo').scrollIntoView({behavior: 'smooth'})">CV</div>
+        </div>
+    </header>
+
+    <div id="menu-full">
+        <div onclick="toggleMenu(false)" style="position:absolute; top:20px; right:8vw; font-size:2.4rem; font-weight: 800; cursor:pointer;">✕</div>
+        <a href="trabalhos.html">TRABALHOS</a>
+        <a href="expos.html">EXPOSIÇÕES</a>
+        <a href="textos.html">TEXTOS</a>
+        <a href="noticias.html">NOTÍCIAS</a>
+        <a href="#" onclick="toggleMenu(false); window.scrollTo({top: 0, behavior: 'smooth'})">BIO</a>
+    </div>
+
+    <main id="main-container">
+        <!-- O texto da BIO será injetado aqui -->
+        <section class="bio-text"></section>
+
+        <!-- O Grid do CV será preenchido dinamicamente -->
+        <div class="cv-grid" id="cv-alvo"></div>
+    </main>
+</div>
+
+<!-- Template Oculto: Bloco de Foto e Contatos (Injetado via JS no final do CV) -->
+<template id="contact-template">
+    <div class="contact-wrapper">
+        <img id="foto-santacosta" class="foto-perfil" src="https://raw.githubusercontent.com/umpedrogallego/site/main/z-testes/foto_perfil_santacosta_2026.jpeg" onclick="togglePB(this)">
+        <div class="contact-links">
+            <a href="https://www.instagram.com/santacosta.art/" target="_blank">@santacosta.art</a>
+            <span>r.santacosta@gmail.com</span>
+        </div>
+    </div> 
+</template>
+ 
+<script>
+    // --- LÓGICA DE DADOS (FETCH & RENDER) ---
+    async function init() {
+        try {
+            // Fetch paralelo usando as URLs fornecidas
+            const [resBio, resCv] = await Promise.all([
+                fetch('https://sitesantacosta.github.io/code/data/bio.json?v=' + Date.now()),
+                fetch('https://sitesantacosta.github.io/code/data/cv.json?v=' + Date.now())
+            ]);
+            
+            const bioData = await resBio.json();
+            const cvData = await resCv.json();
+
+            // 1. Injeta o texto da Bio
+            if (bioData && bioData.length > 0) {
+                document.querySelector('.bio-text').innerHTML = bioData[0].BIO;
+            }
+
+            // 2. Processa e Injeta o CV
+            renderCV(cvData);
+        } catch (e) {
+            console.error("Erro no carregamento dos dados:", e);
+        }
+    }
+
+    function renderCV(cvData) {
+        const cvGrid = document.getElementById('cv-alvo');
+        const contactHTML = document.getElementById('contact-template').innerHTML;
+        
+        cvGrid.innerHTML = ''; // Limpa o grid para o append
+
+        // Agrupa os itens pela categoria (ex: "1_EXPOSIÇÕES INDIVIDUAIS")
+        const grupos = {};
+        cvData.forEach(item => {
+            const cat = item.CATEGORIA;
+            if (!grupos[cat]) grupos[cat] = [];
+            grupos[cat].push(item);
+        });
+
+        // Ordena as chaves alfabeticamente para respeitar o prefixo 1_, 2_, 3_...
+        const chavesOrdenadas = Object.keys(grupos).sort();
+
+        chavesOrdenadas.forEach((chave, index) => {
+            // Remove os números iniciais e o underscore (ex: "1_EXPOSIÇÕES" -> "EXPOSIÇÕES")
+            const tituloLimpo = chave.replace(/^\d+_/g, ''); 
+            
+            const groupDiv = document.createElement('div');
+            groupDiv.className = 'cv-group';
+            
+            let html = `<h2>${tituloLimpo}</h2>`;
+            
+            // Ordena os itens do grupo do ano mais recente para o mais antigo
+            const itensOrdenados = grupos[chave].sort((a, b) => parseInt(b.ANO) - parseInt(a.ANO));
+            
+            itensOrdenados.forEach(item => {
+                // Monta a string de descrição formatada
+                let partes = [item.TITULO];
+                if (item.INFO) partes.push(item.INFO);
+                if (item.LOCAL) partes.push(item.LOCAL);
+                
+                let desc = partes.join(' - ');
+                if (item.CIDADE) desc += `, ${item.CIDADE}`;
+                if (item.PAIS) desc += `, ${item.PAIS}`;
+                
+                html += `<div class="cv-item"><span class="cv-year">${item.ANO}</span><span class="cv-desc">${desc}</span></div>`;
+            });
+            
+            // Se for a última categoria processada, adicionamos o bloco de foto/contato no final dela
+            if (index === chavesOrdenadas.length - 1) {
+                html += contactHTML;
+            }
+            
+            groupDiv.innerHTML = html;
+            cvGrid.appendChild(groupDiv);
+        });
+    }
+
+    // --- CONTROLES DE INTERFACE (ORIGINAIS DA PÁGINA) ---
+    window.onscroll = () => {
+        const scrollThreshold = 380; 
+        const ratio = Math.min(window.scrollY / scrollThreshold, 1);
+        document.documentElement.style.setProperty('--scroll-ratio', ratio);
+    };
+ 
+    function toggleMenu(open) { 
+        document.getElementById('menu-full').style.display = open ? 'flex' : 'none'; 
+    }
+
+    function togglePB(el) {
+        if (el.style.filter === "grayscale(100%)") {
+            el.style.filter = "grayscale(0%)";
+        } else {
+            el.style.filter = "grayscale(100%)";
+        }
+    }
+
+    // Dispara a inicialização
+    init();
+</script>
+</body>
+</html>
