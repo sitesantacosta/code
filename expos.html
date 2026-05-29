@@ -425,7 +425,28 @@
             rawExpos = await resExpos.json();
             manifesto = await resManifesto.json();
 
-            render(processarDados());
+            const dadosProcessados = processarDados();
+
+            // LÓGICA DEEP LINK: Verifica o hash antes do primeiro render
+            const hash = window.location.hash.replace('#', '');
+            if (hash) {
+                const expoParaAbrir = dadosProcessados.find(e => e.PASTA === hash);
+                if (expoParaAbrir) {
+                    tituloAberto = expoParaAbrir.TEXTO; 
+                }
+            }
+
+            render(dadosProcessados);
+
+            // SCROLL DEEP LINK: Desce até a expo correta na carga inicial
+            if (tituloAberto) {
+                setTimeout(() => {
+                    const h = document.querySelector('header').offsetHeight;
+                    const acordeao = document.querySelector('.acordeao-container');
+                    if(acordeao) window.scrollTo({ top: acordeao.offsetTop - h + 1, behavior: 'instant' });
+                }, 300); // Delay levemente maior garante que as imagens assumam sua altura
+            }
+
         } catch (e) {
             console.error("Erro no carregamento:", e);
         }
@@ -517,7 +538,6 @@
             normais.forEach((item, indexNoGrid) => {
                 const min = document.createElement('div');
                 min.className = `obra-miniatura ${tituloAberto === item.expo.TEXTO ? 'ativo' : ''}`;
-                // A capa do grid normal ignora o destaque.jpg porque ele já foi removido em processarDados()
                 const capa = item.expo.fotosThumb[0] || '';
                 
                 min.innerHTML = `
@@ -567,7 +587,16 @@
 
     function toggleExpo(expo, lista) {
         tituloAberto = (tituloAberto === expo.TEXTO) ? null : expo.TEXTO;
+        
+        // LÓGICA DEEP LINK: Insere o hash na URL ou o remove caso o item seja fechado
+        if (tituloAberto) {
+            history.replaceState(null, null, `#${expo.PASTA}`);
+        } else {
+            history.replaceState(null, null, window.location.pathname);
+        }
+
         render(lista);
+
         if (tituloAberto) {
             setTimeout(() => {
                 const h = document.querySelector('header').offsetHeight;
@@ -621,6 +650,7 @@
                 closeLightbox(); 
             } else {
                 tituloAberto = null; 
+                history.replaceState(null, null, window.location.pathname); // LÓGICA DEEP LINK: Limpa ao usar ESC
                 render(processarDados()); 
             }
         } 
