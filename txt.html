@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SANTACOSTA | textos</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --verde-vivo: #e2ff8f;
+            --verde-escuro: #505a50;
+            --verde-medio: #697369;
+            --fundo-claro: #f5f7f6;
+            --fundo-medio: #e5eae7;
+            --verde-escuro-fundo: #202420;
+            --scroll-ratio: 0; /* Controlado via JS para o shrink fluido */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; border-radius: 0 !important; }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--verde-escuro-fundo);
+            display: flex;
+            justify-content: center;
+        }
+
+        #site-wrapper {
+            width: 100%;
+            max-width: 1400px;
+            background-color: var(--fundo-claro);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* --- HEADER DINÂMICO --- */
+        header { 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            background: var(--verde-vivo);
+            border-bottom: 1px solid var(--verde-escuro-fundo);
+        }
+
+        .header-top { 
+            display: flex; 
+            align-items: center; 
+            padding: 0 4vw;
+            height: calc(100px - (var(--scroll-ratio) * 40px));
+        }
+
+        .logo { 
+            font-weight: 800; 
+            cursor: pointer; 
+            letter-spacing: -2px;
+            font-size: calc(4rem - (var(--scroll-ratio) * 1.6rem));
+            margin-right: 40px;
+            line-height: 1;
+        }
+
+        /* Menu Desktop */
+        .desktop-nav {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+            margin-left: auto; 
+            margin-right: 0;   
+        }
+
+        .desktop-nav a {
+            text-decoration: none;
+            color: var(--verde-escuro-fundo);
+            font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+            font-weight: 500;
+            text-transform: uppercase;    
+            transition: border-color 0.1s ease;
+            border-bottom: 1px solid transparent; 
+        }
+
+        .desktop-nav a:hover {
+            text-decoration: underline;
+            text-decoration-color: var(--fundo-claro);
+            text-underline-offset: 0px; 
+            text-decoration-thickness: 10px; 
+            text-decoration-skip-ink: none;
+        }
+
+        .mobile-menu-trigger { display: none; margin-left: auto; cursor: pointer; }
+        .icon-svg { width: 24px; height: 24px; fill: var(--verde-escuro-fundo); }
+
+        .nav-bar { 
+            display: grid;
+            grid-template-columns: 1fr 60px 1fr; 
+            background: var(--fundo-claro); 
+            height: 48px; 
+            border-top: 1px solid var(--verde-escuro-fundo);
+        }
+
+        .nav-item { 
+            display: flex; align-items: center; justify-content: center; 
+            border-right: 1px solid var(--verde-escuro); 
+            font-size: 0.9rem; text-transform: uppercase;
+            cursor: pointer;
+        }
+        
+        .nav-item:hover { 
+            background: var(--verde-vivo);
+        }
+
+        /* --- SEÇÃO DE TEXTOS (ACORDEÃO EDITORIAL) --- */
+        #textos-container { padding: 60px 20px; max-width: 1000px; margin: 0 auto; }
+
+        .texto-item {
+            border-bottom: 1px solid var(--verde-medio);
+            padding: 40px 0;
+        }
+
+        .texto-header {
+            cursor: pointer;
+        }
+
+        .texto-header.ativo .titulo-texto,
+        .texto-header:hover .titulo-texto {
+            color: var(--verde-escuro-fundo);
+            background-color: transparent; 
+            text-decoration: underline;
+            text-decoration-color: var(--verde-vivo);
+            text-underline-offset: 0px; 
+            text-decoration-thickness: 10px;
+            text-decoration-skip-ink: none; 
+        }
+
+        .autor-tag {
+            font-size: 0.85rem;
+            color: var(--verde-medio);
+            text-transform: uppercase;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .titulo-texto {
+            font-size: clamp(1.5rem, 4vw, 2.7rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -1px;
+        }
+
+        /* Toggle Acordeão */
+        .texto-corpo {
+            display: none; 
+            overflow: hidden;
+        }
+
+        .texto-corpo.aberto {
+            display: block; 
+            padding-top: 40px;
+        }
+
+        .inner-content {
+            font-size: clamp(1rem, 1.8vw, 1.15rem);
+            line-height: 1.8;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .inner-content p { margin-bottom: 25px; }
+
+        /* Estilização de Links Internos nos Textos (Conforme Referência) */
+        .inner-content a {
+            color: var(--verde-escuro-fundo); 
+            text-decoration: none;             
+            font-weight: 500; 
+            border-bottom: 1px solid var(--verde-medio);
+            transition: background-color 0.2s ease;
+        }
+        .inner-content a:hover {
+            background-color: var(--verde-vivo);
+            border-bottom: 1px solid var(--verde-vivo);
+        }
+
+        blockquote {
+            border-left: 4px solid var(--verde-vivo);
+            padding-left: 25px;
+            margin: 40px 0;
+            font-style: italic;
+            color: var(--verde-medio);
+        }
+
+        .footnotes {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid var(--verde-medio);
+            font-size: 0.8rem;
+            color: var(--verde-medio);
+            line-height: 1.5;
+        }
+
+        /* --- MENU FULL (MOBILE) --- */
+        #menu-full { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            background: var(--verde-vivo); z-index: 2000; display: none; 
+            flex-direction: column; justify-content: center; align-items: center; gap: 30px;
+        }
+
+        #menu-full a { 
+            text-decoration: none; color: var(--verde-escuro-fundo); 
+            font-size: 1.5rem; font-weight: 800;
+        }
+
+        /* --- RESPONSIVIDADE --- */
+        @media (max-width: 850px) {
+            .header-top { height: 70px !important; }
+            .desktop-nav { display: none; }
+            .mobile-menu-trigger { display: block; }
+            .logo { font-size: 2rem !important; margin-right: 0; }
+            .nav-bar { grid-template-columns: 1fr 1fr; }
+            .nav-item:nth-child(2) { display: none; }
+        }
+    </style>
+</head>
+    
+<body>
+
+<div id="site-wrapper">
+    <header id="dynamic-header">
+        <div class="header-top">
+            <div class="logo" onclick="location.href='index.html'">SANTACOSTA</div>
+            <nav class="desktop-nav">
+                <a href="trabalhos.html">TRABALHOS</a>
+                <a href="expos.html">EXPOSIÇÕES</a>
+                <a style="font-weight: 400; cursor: default; color: var(--verde-medio)">TEXTOS</a>
+                <a href="noticias.html">NOTÍCIAS</a>
+                <a href="bio.html">BIO</a>
+            </nav>
+            <div class="mobile-menu-trigger" onclick="toggleMenu(true)">
+                <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+            </div>
+        </div>
+    </header>
+
+    <div id="menu-full">
+        <div onclick="toggleMenu(false)" style="position:absolute; top:20px; right:8vw; font-size:2.4rem; font-weight: 800; cursor:pointer;">✕</div>
+        <a href="trabalhos.html" style="font-size:2.4rem; font-weight: 800;">TRABALHOS</a>
+        <a href="expos.html" style="font-size:2.4rem; font-weight: 800;">EXPOSIÇÕES</a>
+        <a href="textos.html" style="font-size:2.4rem; font-weight: 800;">TEXTOS</a>
+        <a href="noticias.html" style="font-size:2.4rem; font-weight: 800;">NOTÍCIAS</a>
+        <a href="bio.html" style="font-size:2.4rem; font-weight: 800;">BIO</a>
+    </div>
+
+    <main id="textos-container"></main>
+</div>
+ 
+<script>
+    let rawTextos = [];
+
+    // 1. CARREGAMENTO DOS DADOS DO JSON REMOTO
+    async function init() {
+        try {
+            const response = await fetch('https://santacosta.net/data/textos.json?v=' + Date.now());
+            rawTextos = await response.json();
+            
+            renderTextos(rawTextos);
+
+            // LÓGICA DEEP LINK: Executa após montar o DOM dinâmico
+            const hash = window.location.hash.replace('#', '');
+            if (hash) {
+                const headers = document.querySelectorAll('.texto-header');
+                for (let header of headers) {
+                    const titulo = header.querySelector('.titulo-texto').innerText;
+                    if (getSlug(titulo) === hash) {
+                        setTimeout(() => toggleTexto(header, true), 100);
+                        break;
+                    }
+                }
+            }
+        } catch (e) {
+            console.error("Erro ao carregar o arquivo textos.json:", e);
+        }
+    }
+
+    // 2. RENDERIZADOR DINÂMICO DOS ITENS DO ACORDEÃO
+    function renderTextos(lista) {
+        const container = document.getElementById('textos-container');
+        container.innerHTML = '';
+
+        lista.forEach(item => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'texto-item';
+            itemDiv.innerHTML = `
+                <div class="texto-header" onclick="toggleTexto(this)">
+                    <span class="autor-tag">${item.AUTORIA}</span>
+                    <h2 class="titulo-texto">${item.TITULO}</h2>
+                </div>
+                <div class="texto-corpo">
+                    <div class="inner-content">
+                        ${item.TEXTO}
+                    </div>
+                </div>
+            `;
+            container.appendChild(itemDiv);
+        });
+    }
+
+    // 3. HELPER: Cria o slug a partir da string do título
+    function getSlug(text) {
+        return text.toLowerCase()
+                    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove acentos
+                    .replace(/[^a-z0-9]+/g, '-')                      // Troca espaços por hífen
+                    .replace(/(^-|-$)/g, '');                         // Limpa as pontas
+    }
+
+    // 4. CONTROLE DE SCROLL FLUIDO DO HEADER (Shrink)
+    window.onscroll = () => {
+        const scrollThreshold = 380;
+        const ratio = Math.min(window.scrollY / scrollThreshold, 1);
+        document.documentElement.style.setProperty('--scroll-ratio', ratio);
+    };
+    
+    function toggleMenu(open) { 
+        document.getElementById('menu-full').style.display = open ? 'flex' : 'none'; 
+    }
+
+    // 5. FUNÇÃO INTERATIVA DO ACORDEÃO
+    function toggleTexto(header, isInitial = false) {
+        const corpo = header.nextElementSibling;
+        const todosOsCorpos = document.querySelectorAll('.texto-corpo');
+        const todosOsHeaders = document.querySelectorAll('.texto-header');
+        const jaEstavaAberto = corpo.classList.contains('aberto');
+
+        // Reseta o estado dos outros elementos (exclusividade de abertura)
+        todosOsCorpos.forEach(t => t.classList.remove('aberto'));
+        todosOsHeaders.forEach(h => h.classList.remove('ativo'));
+
+        if (!jaEstavaAberto) {
+            corpo.classList.add('aberto');
+            header.classList.add('ativo');
+
+            // DEEP LINK: Sincroniza o hash na URL
+            const titulo = header.querySelector('.titulo-texto').innerText;
+            history.replaceState(null, null, '#' + getSlug(titulo));
+
+            // Scroll Posicional Seco (Fidelity Layout)
+            const headerHeight = document.querySelector('header').offsetHeight;
+            const elementPosition = header.getBoundingClientRect().top + window.scrollY;
+            const offsetPosition = elementPosition - headerHeight;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'instant'
+            });
+        } else {
+            // Remove o hash se fechar o item
+            history.replaceState(null, null, window.location.pathname);
+        }
+    }
+
+    // Inicialização automática do ciclo
+    init();
+</script>
+</body>
+</html>
